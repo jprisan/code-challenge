@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
-import request from './request';
-import { ARTICLES_QUERY } from './queries';
+import request from './services/request';
+import { ARTICLES_QUERY } from './controller/queries';
+
+import Header from './components/Header';
+import Card from './components/Card';
+import Footer from './components/Footer';
+
+const HEADER_TITLE = 'Billin code challenge';
 
 class App extends Component {
-  // definition
-  constructor(props) {
-    super(props);
-    this.state = {
-      articles: [],
-    };
-  }
+  state = {
+    articles: []
+  };
 
   // lifecycle
-  componentWillMount() {
+  componentDidMount() {
     request(ARTICLES_QUERY).then(response => {
-      this.setState({ articles: response.data.articles });
+      this.setState({ articles: response.data && response.data.articles });
     });
   }
 
@@ -22,8 +24,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h2>Billin code challenge</h2>
-        <pre>{JSON.stringify(this.state.articles, null, 2)}</pre>
+        <Header title={HEADER_TITLE} />
+        {this.state.articles.map(article => (
+          <Card article={article} />
+        ))}
+        <Footer />
       </div>
     );
   }
